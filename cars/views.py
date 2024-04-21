@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from carSite.settings import BASE_DIR
 # Create your views here.
@@ -20,3 +20,18 @@ def admin1(request):
 
     
     return render(request, 'upload.html')
+
+
+def delete_car(request, car_id):
+    # Get the car object to delete
+    car = get_object_or_404(cars_data, pk=car_id)
+    
+    # Check if the request method is POST
+    if request.method == 'POST':
+        # Delete the car object
+        car.delete()
+        # Redirect to the index page after deletion
+        return redirect('cars:index')
+    
+    # If the request method is not POST, render a confirmation page
+    return render(request, 'delete_car.html', {'car': car})
